@@ -2,27 +2,27 @@
 
 <img src="assets/AutoMaster.png" alt="AutoMaster — a teacher robot sharing a skill with a student robot" width="760">
 
-### Autonomous Post-Training by Making the Same Model a Better Teacher
+## Autonomous Post-Training by Making the Same Model a Better Teacher
 
 *Beyond task success: **autonomously shaping teacher behavior to improve what students learn**.*
 
-[Video](#watch-automaster) · [Inside AutoMaster](#inside-automaster) · [Results](#results) · [Insights](#key-insights) · [Skills](skills/README.md) · [Quick start](#quick-start) · [Models & data](https://huggingface.co/collections/RUC-AIBOX/automaster) · [Citation](#citation)
+[Video](#how-automaster-works) · [Inside AutoMaster](#inside-automaster) · [Results](#results-across-three-domains) · [Insights](#key-insights) · [Skills](skills/README.md) · [Quick start](#quick-start) · [Models & data](https://huggingface.co/collections/RUC-AIBOX/automaster) · [Citation](#citation)
 
-[![Paper](https://img.shields.io/badge/Paper-PDF-B31B1B.svg?logo=arxiv&logoColor=white)](https://aweai-team.github.io/AutoMaster/assets/paper.pdf?v=e0be391fbd)
+[![arXiv](https://img.shields.io/badge/arXiv-2611.26510-B31B1B.svg?logo=arxiv&logoColor=white)](https://arxiv.org/pdf/2611.26510)
 [![Homepage](https://img.shields.io/badge/Project-Homepage-606f2e.svg)](https://aweai-team.github.io/AutoMaster/)
 [![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-Collection-d5ac58.svg)](https://huggingface.co/collections/RUC-AIBOX/automaster)<br>
 [![Skills](https://img.shields.io/badge/Skills-9-7c8b62.svg)](skills/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-a29a7d.svg)](LICENSE)
 
-</div>
+*If you find AutoMaster useful, give us a star ⭐ to support the project.*
 
-**A teacher can solve a task and still teach a bad habit.**
+</div>
 
 **AutoMaster** autonomously studies trajectories, designs skills, and selects demonstrations to make the same model a better teacher. **Skill-FT** guides Teacher rollouts with these skills and fine-tunes the Student on the resulting demonstrations. The Student is evaluated without generated skills.
 
 This release includes [nine selected skills](skills/README.md) and [inference recipes](recipes/inference/README.md) for three domains, powered by [AweAgent](https://github.com/AweAI-Team/AweAgent).
 
-## Watch AutoMaster
+## How AutoMaster works
 
 <p align="center">
   <a href="https://aweai-team.github.io/AutoMaster/assets/overview.mp4?v=cbf0f5c8"><img src="assets/readme/video-poster.jpg" alt="Watch the AutoMaster project video" width="760"></a><br>
@@ -41,15 +41,15 @@ This release includes [nine selected skills](skills/README.md) and [inference re
 
 [Explore the method and behavioral examples →](docs/method.md)
 
-## Results
+## Results across three domains
 
 <p align="center">
   <a href="assets/readme/results.svg"><img src="assets/readme/results.svg" alt="Base, Vanilla SFT and AutoMaster results for Qwen3.5-4B and 9B. Scores are percentages: accuracy for Terminal-Bench 2.1 and BrowseComp, test pass rate for Doc2Repo. Error bars show sample SD over three evaluations." width="100%"></a>
 </p>
 
-## Key Insights
+## Key insights
 
-- **Task success ≠ a good demonstration.** Even successful trajectories can contain unsupported assumptions, unproductive exploration, or superficial verification. Training on them can reinforce these habits alongside useful behaviors.
+- **Task success alone does not tell us what a demonstration teaches.** Even successful trajectories can contain unsupported assumptions, unproductive exploration, or superficial verification. Training on them can reinforce these habits alongside useful behaviors.
 
 - **Better teaching without a stronger teacher.** Shaping how a fixed Teacher executes tasks can improve its demonstrations. AutoMaster improves mean Student performance by **1.42–8.99 percentage points** over Vanilla SFT, with the Teacher, task pool, training set size, and SFT recipe held fixed.
 
@@ -59,7 +59,7 @@ This release includes [nine selected skills](skills/README.md) and [inference re
 
 - **Autonomous post-training benefits from exploration.** Rollout evidence and Student evaluation guide further skill design and data selection. Continued experimentation can uncover better candidates after limited progress; individual rounds need not improve monotonically.
 
-## Explore the skills
+## Skills in practice
 
 Each skill is a self-contained folder with a `SKILL.md` entrypoint.
 
@@ -72,7 +72,7 @@ Each skill is a self-contained folder with a `SKILL.md` entrypoint.
 
 ## Quick start
 
-### 1. Get AutoMaster and the inference dependency
+### 1. Set up the inference environment
 
 ```bash
 git clone --recurse-submodules https://github.com/RUCAIBox/AutoMaster.git
@@ -96,7 +96,7 @@ bash recipes/inference/serve_qwen35.sh
 
 Set `TP` for tensor parallelism. Keep the checkpoint's tokenizer and chat template with its weights. An existing OpenAI-compatible endpoint can also be used directly.
 
-### 3. Run a benchmark
+### 3. Evaluate the model
 
 Configure the task assets and any required external services using the [inference guide](recipes/inference/README.md), then run one task:
 
@@ -106,7 +106,7 @@ awe-agent run --config recipes/inference/doc2repo.yaml --max-instances 1
 
 Use `--num-rollouts 3` for three evaluations; choose `terminal.yaml`, `browsecomp.yaml`, or `doc2repo.yaml` for the benchmark.
 
-## Repository
+## Repository structure
 
 ```text
 AutoMaster/
@@ -127,4 +127,16 @@ For changes or bug reports, see [Contributing](CONTRIBUTING.md).
 
 ## Citation
 
-<!-- Add BibTeX when the arXiv identifier is available. -->
+If you use AutoMaster in your research, please cite:
+
+```bibtex
+@misc{chen2026automasterautonomousposttrainingmaking,
+  title={AutoMaster: Autonomous Post-Training by Making the Same Model a Better Teacher},
+  author={Guoxin Chen and Shuang Sun and Fanzhe Meng and Xinyu Tang and Ruihua Song and Wayne Xin Zhao},
+  year={2026},
+  eprint={2611.26510},
+  archivePrefix={arXiv},
+  primaryClass={cs.CL},
+  url={https://arxiv.org/abs/2611.26510},
+}
+```

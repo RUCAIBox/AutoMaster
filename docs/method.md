@@ -26,7 +26,7 @@ Skills can suppress an undesirable habit or elicit an effective behavior that ap
 <h4>Checking the sort order</h4>
 <a href="../assets/skills/figure5c.png"><img src="../assets/skills/figure5c.png" alt="A flawed self-test prompts the unguided Teacher to reverse the sorting rule. The guided Teacher diagnoses the test input, preserves the required order, and passes 38 of 38 tests." width="100%"></a>
 <p>A flawed self-test prompts the unguided Teacher to reverse the sorting rule. The guided Teacher diagnoses the test input, preserves the required order, and passes 38 of 38 tests.</p>
-<a href="https://aweai-team.github.io/AutoMaster/assets/paper.pdf?v=e0be391fbd#page=9">Trace failures to their source · Figure 5c</a>
+<a href="https://arxiv.org/pdf/2611.26510#page=9">Trace failures to their source · Figure 5c</a>
 </td>
 </tr>
 </table>
