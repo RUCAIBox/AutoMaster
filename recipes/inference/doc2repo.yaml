@@ -1,4 +1,4 @@
-# Portable inference example, not a claim of exact paper-score reproduction.
+# Public inference recipe; see docs/evaluation.md for settings.
 llm:
   backend: openai
   model: ${SERVED_MODEL_NAME:-automaster}

@@ -1,0 +1,74 @@
+[
+  {
+    "domain": "tb2.1",
+    "name": "execute-numeric-decision",
+    "sha256": "b26bd6b9af71d362c90ed6b99f65f5e8c0e69a70182802d8ae3691384dfa6f55",
+    "purpose": "Turn numerical requirements into executed acceptance decisions and diagnose failed comparisons without relaxing the requirement.",
+    "evidence": "Included in training; paired numerical-solver behavior case.",
+    "file": "tb2.1/execute-numeric-decision/SKILL.md"
+  },
+  {
+    "domain": "tb2.1",
+    "name": "verify-consumer",
+    "sha256": "5ea071ababafe36a4d2b1136f25771fea5a99e61cd40cd3aadc9274731644c85",
+    "purpose": "Measure the property the user needs on the saved deliverable, rather than on an intermediate value.",
+    "evidence": "Included in historical training sets; this is the archived v4 text.",
+    "file": "tb2.1/verify-consumer/SKILL.md"
+  },
+  {
+    "domain": "tb2.1",
+    "name": "preserve-reference-operations",
+    "sha256": "3ce45e85654c4d9720119ea8a7ef1723c1f609be083340c996cb7a854901ab60",
+    "purpose": "Optimize around operations that determine exact outputs before changing floating-point reduction or tie-breaking semantics.",
+    "evidence": "Included in historical training sets.",
+    "file": "tb2.1/preserve-reference-operations/SKILL.md"
+  },
+  {
+    "domain": "bc",
+    "name": "recover-search-anchor",
+    "sha256": "d222c89a18ed481e90f7db3b2719ae39cc4fde5224e8f1933c51b115896da8cc",
+    "purpose": "Escape a stalled search by identifying and relaxing the unsupported assumption in the query.",
+    "evidence": "Paired episode-identification case; both executions succeeded.",
+    "file": "bc/recover-search-anchor/SKILL.md"
+  },
+  {
+    "domain": "bc",
+    "name": "measured-relations",
+    "sha256": "c0eecabd137354c802e9773c6f074efa9335e3ab46aca6e22b86374e7fd7031a",
+    "purpose": "Preserve endpoints, travel mode and units when using distance evidence.",
+    "evidence": "Paired distance case; both executions succeeded and local behavior differs.",
+    "file": "bc/measured-relations/SKILL.md"
+  },
+  {
+    "domain": "bc",
+    "name": "source-terms",
+    "sha256": "463372e645bd45b10449f88d662dc705fcc9c17dcd7126df5edbf81bdbd12f6f",
+    "purpose": "Retrieve missing facts in the vocabulary and language of the source while preserving entity identity.",
+    "evidence": "Paired person-disambiguation case; language switching alone was not the distinguishing behavior.",
+    "file": "bc/source-terms/SKILL.md"
+  },
+  {
+    "domain": "doc2repo",
+    "name": "collaborator-contracts",
+    "sha256": "42f15418b818828fe62295e26f4a1c1bf04f8549e2e24c11af6436a1c8db0225",
+    "purpose": "Probe actual dependency construction, activation and ownership contracts before building cooperating objects.",
+    "evidence": "Paired FastAPI/TestClient case; included in training.",
+    "file": "doc2repo/collaborator-contracts/SKILL.md"
+  },
+  {
+    "domain": "doc2repo",
+    "name": "run-observed-public-call",
+    "sha256": "600f04794c2f14e7f2834f21ca0d7ca6e43c100e0a5809de346ca7b79ff2d84d",
+    "purpose": "Exercise the real public call chain and record effects at the external boundary instead of mocking away owned code.",
+    "evidence": "Paired HTTP-client case; both executions remained partially correct.",
+    "file": "doc2repo/run-observed-public-call/SKILL.md"
+  },
+  {
+    "domain": "doc2repo",
+    "name": "owned-regions",
+    "sha256": "1e38f2de09a9b9a07264f0b6f130bfb6972187dfbccf044f61f3d948db1eab51",
+    "purpose": "Give each parser layer explicit ownership of an input region, then verify child-to-parent and sibling handoff.",
+    "evidence": "Paired nested-stream case; included in training.",
+    "file": "doc2repo/owned-regions/SKILL.md"
+  }
+]

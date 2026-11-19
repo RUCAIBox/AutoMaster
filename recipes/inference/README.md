@@ -1,95 +1,89 @@
-# AutoMaster checkpoint inference
+# Checkpoint inference
 
-These portable examples run a Qwen3.5-based checkpoint from a Hugging Face repo
-or local directory, without the autonomous training controller or generated skills.
-They use public AweAgent components only: CalibForge (terminal), FoldSearch
-(BrowseComp), and SearchSWE with search disabled (Doc2Repo).
+Run a Hugging Face checkpoint or local model directory with the public AweAgent harness. Choose the domain recipe, supply its task assets, and point it at an OpenAI-compatible model endpoint. No generated skill is added to the evaluated Student.
 
-## Install and serve
+## 1. Install the harness
 
-The planned dependency location is `third_party/AweAgent`, pinned as a Git
-submodule to a public commit. **The submodule is not yet added:** the inference
-changes currently exist only on a local branch awaiting upstream publication.
-The following installation command becomes usable once that dependency is added:
+From the AutoMaster repository root:
 
 ```bash
-# Run from the AutoMaster repository after its AweAgent submodule is published.
+git submodule update --init --recursive
+python3 -m venv .venv
+source .venv/bin/activate
 python -m pip install -e './third_party/AweAgent[search]'
 ```
 
-Run SGLang in a **separate serving environment** with a Qwen3.5-compatible version
-of SGLang, PyTorch and CUDA. Use the serving version provided by your model release;
-this recipe does not install or validate a GPU stack. Keep the checkpoint's
-`tokenizer_config.json` and `chat_template.jinja` alongside its weights.
+Python 3.11+ is required. The submodule is pinned to the public version listed in the [resource index](../../docs/resources.md).
+
+## 2. Set local configuration
 
 ```bash
-export MODEL_PATH='your-org/your-model'  # or /path/to/downloaded/checkpoint
+cp recipes/inference/.env.example .env
+# Edit .env for your model, task assets and services.
+set -a
+source .env
+set +a
+```
+
+`.env` is ignored by Git. The harness reads exported environment variables; it does not automatically load this file. Set only the variables needed by the domain you are running.
+
+## 3. Serve the model
+
+Use a separate environment with SGLang, PyTorch and CUDA configured for your GPU and Qwen3.5. From the repository root in that environment:
+
+```bash
+export MODEL_PATH='/path/to/checkpoint'  # or a Hugging Face model ID
 export SERVED_MODEL_NAME=automaster
 bash recipes/inference/serve_qwen35.sh
 ```
 
-For multiple GPUs, set `TP` to the desired tensor-parallel size. The default bind
-address is loopback; set `HOST` explicitly if serving a remote client. Pass additional
-SGLang options as script arguments. HF authentication, if needed, uses the user's
-standard Hugging Face credentials; no credentials belong in this repository.
-
-In the evaluation environment, set `MODEL_BASE_URL` if the server is not at
-`http://127.0.0.1:30000/v1`. The configs request `enable_history_reasoning=true`:
-confirm that the model's template supports this setting so a follow-up user
-reminder does not silently remove earlier reasoning.
-
-## Run a task, then a benchmark
-
-| Domain | Required assets | Example config |
-|---|---|---|
-| Terminal | `TB_TASK_DIR`: extracted task directories; `TB_TASK_IDS`: JSON array of selected task IDs | `terminal.yaml` |
-| BrowseComp | `BROWSECOMP_DATA_FILE`: CSV, JSON or JSONL questions; `MODEL_PATH`: matching tokenizer | `browsecomp.yaml` |
-| Doc2Repo | `DOC2REPO_DATA_FILE`: Doc2Repo-only BeyondSWE JSONL; `DOC2REPO_TEST_SUITE_DIR`: test-suite ZIP directory | `doc2repo.yaml` |
-
-See the [terminal](../../third_party/AweAgent/recipes/terminal_bench_v2/README.md),
-[BrowseComp](../../third_party/AweAgent/recipes/deepsearch/README.md), and [BeyondSWE](../../third_party/AweAgent/recipes/beyond_swe/README.md)
-recipes for dataset preparation. Code tasks require Docker and accessible task
-images. BrowseComp does not create a sandbox container.
-
-For example, after setting the domain's required variables:
+Set `TP` for tensor parallelism, `PORT` for the listen port, and `HOST` if a remote evaluation client needs access. Defaults are TP=1, port=30000 and host=127.0.0.1. Additional arguments are passed to SGLang. For example:
 
 ```bash
-# Inspect the selected task before sending any model requests.
+TP=4 bash recipes/inference/serve_qwen35.sh --mem-fraction-static 0.85
+```
+
+Keep the checkpoint's tokenizer and chat template beside its weights. The recipes send `enable_history_reasoning=true` and `enable_thinking=true`; use a template that supports these settings so follow-up user reminders retain historical reasoning.
+
+Alternatively, use an existing endpoint by setting `MODEL_BASE_URL`, `MODEL_API_KEY` and `SERVED_MODEL_NAME`. For BrowseComp, `MODEL_PATH` must still identify the matching tokenizer for context counting.
+
+## 4. Prepare domain assets
+
+| Domain | Required variables | Asset preparation |
+|---|---|---|
+| Terminal-Bench 2.1 | `TB_TASK_DIR`, `TB_TASK_IDS` | [AweAgent terminal recipe](../../third_party/AweAgent/recipes/terminal_bench_v2/README.md) |
+| BrowseComp | `BROWSECOMP_DATA_FILE`, `MODEL_PATH`, search/summary/Judge settings below | [AweAgent search recipe](../../third_party/AweAgent/recipes/deepsearch/README.md) |
+| Doc2Repo | `DOC2REPO_DATA_FILE`, `DOC2REPO_TEST_SUITE_DIR` | [AweAgent BeyondSWE recipe](../../third_party/AweAgent/recipes/beyond_swe/README.md) |
+
+`TB_TASK_IDS` is the path to a JSON file containing an array of task IDs. `DOC2REPO_DATA_FILE` must contain the intended Doc2Repo subset, rather than all BeyondSWE task types. Terminal and Doc2Repo need Docker and accessible task images. BrowseComp does not create a task container.
+
+### BrowseComp services
+
+The public recipe uses SerpAPI for search and Jina for reading webpages:
+
+- `SERPAPI_API_KEY`, `JINA_API_KEY`.
+- `SUMMARY_MODEL`, `SUMMARY_BASE_URL`, `SUMMARY_API_KEY` for webpage summarization.
+- `JUDGE_MODEL`, `JUDGE_BASE_URL`, `JUDGE_API_KEY` for answer grading.
+
+Summary and Judge are separate from the Student under evaluation and accept OpenAI-compatible services. To run without grading, export `AWE_AGENT__EVAL__ENABLED=false`; search and summary services are still needed.
+
+## 5. Execute
+
+In the evaluation environment, from the repository root:
+
+```bash
+# Check the selected task and configuration.
 awe-agent run --config recipes/inference/doc2repo.yaml --max-instances 1 --dry-run
-# Run one real task and its evaluator.
-awe-agent run --config recipes/inference/doc2repo.yaml --max-instances 1
-# Run the supplied set three times. Concurrency is a resource setting.
+
+# Execute one task.
+awe-agent run --config recipes/inference/doc2repo.yaml --max-instances 1 \
+  --output ./results/doc2repo-smoke
+
+# Evaluate the supplied task set three times.
 awe-agent run --config recipes/inference/doc2repo.yaml \
   --num-rollouts 3 --max-concurrent 4 --output ./results/doc2repo
 ```
 
-Replace the config filename to run another domain. Results and trajectories are
-written under the output directory. Preserve all attempts and failures when
-computing scores; do not select a repeat based on the resulting score.
+Use `terminal.yaml` or `browsecomp.yaml` for the other domains. Choose concurrency for your resources. Results and trajectories are written beneath the output directory; preserve all repeats when computing the mean and SD.
 
-### BrowseComp services
-
-Set `SERPAPI_API_KEY` and `JINA_API_KEY` for the public search and reader backends.
-Set `SUMMARY_MODEL`, `SUMMARY_BASE_URL`, `SUMMARY_API_KEY` and the analogous
-`JUDGE_*` variables for OpenAI-compatible summary and judging services. These are
-separate from the evaluated model. For inference without grading, set
-`AWE_AGENT__EVAL__ENABLED=false`; summary and search services are still required.
-
-FoldSearch exposes `search_api`, `link_summary_tool` and `finish` to the model,
-while dispatching to AweAgent's public search/read tools. It folds the oldest tool
-observations in the **model input**, retains the full saved interaction history,
-and reserves room for a final answer. No generated AutoMaster skills are injected.
-
-## Scope of these examples
-
-These are portable starting configurations, **not frozen paper reproduction
-manifests**. They start with one concurrent task and no whole-task retry. Terminal
-uses a 3-hour agent budget; Doc2Repo uses 4 hours, separate from verifier time;
-BrowseComp uses context/step budgets. The examples deliberately do not depend on
-private sandboxes, search services, account routing or a remote scheduler.
-
-Replacing search providers, dataset revisions, images, sampling parameters,
-retry policies or verifier implementations can change scores. Use model-release
-manifests to reproduce a specific result, including the exact task IDs, tokenizer,
-scaffold commit, model revision and three evaluation records. A successful config
-load or unit test is not an end-to-end GPU/benchmark reproduction.
+[Evaluation settings](../../docs/evaluation.md) describe the recipe budgets and sampling parameters. These recipes use public backends; changing search providers or task assets can change evaluation results.

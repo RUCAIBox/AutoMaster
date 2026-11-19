@@ -1,0 +1,41 @@
+name: Validate release files
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pyyaml
+      - name: Check skills and YAML
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          import yaml
+          root = Path('skills')
+          entries = json.loads((root / 'catalog.json').read_text())
+          assert len(entries) == len({row['file'] for row in entries})
+          assert {row['file'] for row in entries} == {
+              str(p.relative_to(root)) for p in root.glob('*/*/SKILL.md')
+          }
+          for row in entries:
+              p = root / row['file']
+              assert hashlib.sha256(p.read_bytes()).hexdigest() == row['sha256'], p
+              frontmatter = yaml.safe_load(p.read_text().split('---', 2)[1])
+              assert frontmatter['name'] == p.parent.name == row['name'], p
+              assert frontmatter['description'], p
+          for p in Path('recipes/inference').glob('*.yaml'):
+              config = yaml.safe_load(p.read_text())
+              assert {'llm', 'agent', 'task', 'execution'} <= config.keys(), p
+          print(f'Validated {len(entries)} skills and inference YAML.')
+          PY
+      - name: Check serving script
+        run: bash -n recipes/inference/serve_qwen35.sh

@@ -1,0 +1,20 @@
+# Local environments and credentials
+.venv*/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+# Downloaded assets and experiment outputs
+/models/
+/data/
+/results/
+/outputs/
+*.safetensors
+*.ckpt
+*.pt
+*.bin
+*.log
+.DS_Store
