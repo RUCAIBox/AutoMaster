@@ -1,4 +1,4 @@
-# Public inference recipe; see docs/evaluation.md for settings.
+# Public inference recipe; see recipes/inference/README.md for settings.
 llm:
   backend: openai
   model: ${SERVED_MODEL_NAME:-automaster}

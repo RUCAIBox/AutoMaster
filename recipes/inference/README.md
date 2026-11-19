@@ -13,7 +13,7 @@ source .venv/bin/activate
 python -m pip install -e './third_party/AweAgent[search]'
 ```
 
-Python 3.11+ is required. The submodule is pinned to the public version listed in the [resource index](../../docs/resources.md).
+Python 3.11+ is required. AweAgent is pinned to commit [`2c3fd84`](https://github.com/AweAI-Team/AweAgent/commit/2c3fd84b9c705fed318af762eee2b23b57a9b5d1).
 
 ## 2. Set local configuration
 
@@ -86,4 +86,17 @@ awe-agent run --config recipes/inference/doc2repo.yaml \
 
 Use `terminal.yaml` or `browsecomp.yaml` for the other domains. Choose concurrency for your resources. Results and trajectories are written beneath the output directory; preserve all repeats when computing the mean and SD.
 
-[Evaluation settings](../../docs/evaluation.md) describe the recipe budgets and sampling parameters. These recipes use public backends; changing search providers or task assets can change evaluation results.
+## Recipe settings
+
+| Setting | Terminal-Bench 2.1 | BrowseComp | Doc2Repo |
+|---|---|---|---|
+| Scaffold | `calibforge` | `fold_search` | `search_swe`, search disabled |
+| Agent budget | 3 hours | Step and context budget | 4 hours |
+| Maximum steps | 500 | 600 | 400 |
+| Evaluator timeout | 1 hour | 1 hour | 2 hours |
+| Temperature / top-p | 1.0 / 0.95 | 1.0 / 0.95 | 1.0 / 0.95 |
+| Completion tokens | 16,384 | Dynamic, capped at 65,500 | 16,384 |
+
+BrowseComp uses a 261,120-token context budget and folds older tool observations to make room for further search. Its summary and Judge models use temperature 0 and a completion limit of 8,192 tokens. The YAML files contain the full settings: [Terminal](terminal.yaml), [BrowseComp](browsecomp.yaml), [Doc2Repo](doc2repo.yaml).
+
+Terminal and BrowseComp report task accuracy; Doc2Repo reports mean test pass rate. Compute each repeat's score separately, then report their mean and sample SD. These recipes use public backends; changing search providers or task assets can change evaluation results.

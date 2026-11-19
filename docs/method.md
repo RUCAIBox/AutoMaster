@@ -6,6 +6,16 @@ Skills can suppress an undesirable habit or elicit an effective behavior that ap
 
 **AutoMaster is the autonomous research system.** Its research agent examines Student trajectories, unguided Teacher trajectories and available reference-model trajectories. It designs interventions, tests them through pilot executions, revises their scope, expands useful candidates and selects demonstrations. Student SFT and evaluation provide feedback for further research. The research agent and the trained Student are separate roles.
 
+## Behavioral shaping in practice
+
+<p align="center">
+  <a href="../assets/teacher_case.png"><img src="../assets/teacher_case.png" alt="Teacher execution examples: checking numerical claims, grounding search in evidence, and diagnosing a faulty self-test before changing implementation behavior." width="100%"></a>
+</p>
+
+These cases illustrate changes in execution, not just changes in wording. In the numerical and search examples, both executions succeed, yet differ in how they establish their conclusions. In the repository example, diagnosis preserves the specified ordering rule and improves test coverage. Click the figure to inspect the details.
+
+Read two of the illustrated interventions: [execute-numeric-decision](../skills/tb2.1/execute-numeric-decision/SKILL.md) and [recover-search-anchor](../skills/bc/recover-search-anchor/SKILL.md).
+
 ## Skills and data selection work together
 
 A skill can apply to many tasks, a task can receive several skills, and different subsets can use different combinations. Task subsets can overlap. The research agent selects individual generated demonstrations rather than assuming that every rollout using a skill is equally useful.
