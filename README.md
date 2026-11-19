@@ -8,7 +8,7 @@
 
 [Video](#watch-automaster) · [Inside AutoMaster](#inside-automaster) · [Results](#results) · [Insights](#key-insights) · [Skills](skills/README.md) · [Quick start](#quick-start) · [Models & data](https://huggingface.co/collections/RUC-AIBOX/automaster) · [Citation](#citation)
 
-[![Paper](https://img.shields.io/badge/Paper-PDF-B31B1B.svg?logo=arxiv&logoColor=white)](https://aweai-team.github.io/AutoMaster/assets/paper.pdf)
+[![Paper](https://img.shields.io/badge/Paper-PDF-B31B1B.svg?logo=arxiv&logoColor=white)](https://aweai-team.github.io/AutoMaster/assets/paper.pdf?v=e0be391fbd)
 [![Homepage](https://img.shields.io/badge/Project-Homepage-606f2e.svg)](https://aweai-team.github.io/AutoMaster/)
 [![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-Collection-d5ac58.svg)](https://huggingface.co/collections/RUC-AIBOX/automaster)<br>
 [![Skills](https://img.shields.io/badge/Skills-9-7c8b62.svg)](skills/README.md)
@@ -25,8 +25,8 @@ This release includes [nine selected skills](skills/README.md) and [inference re
 ## Watch AutoMaster
 
 <p align="center">
-  <a href="https://aweai-team.github.io/AutoMaster/assets/overview.mp4"><img src="assets/readme/video-poster.jpg" alt="Watch the AutoMaster project video" width="760"></a><br>
-  <a href="https://aweai-team.github.io/AutoMaster/assets/overview.mp4"><b>▶ Watch the overview</b></a>
+  <a href="https://aweai-team.github.io/AutoMaster/assets/overview.mp4?v=cbf0f5c8"><img src="assets/readme/video-poster.jpg" alt="Watch the AutoMaster project video" width="760"></a><br>
+  <a href="https://aweai-team.github.io/AutoMaster/assets/overview.mp4?v=cbf0f5c8"><b>▶ Watch the overview</b></a>
 </p>
 
 ## Inside AutoMaster
@@ -68,7 +68,7 @@ Each skill is a self-contained folder with a `SKILL.md` entrypoint.
 | [Test a numerical claim](skills/tb2.1/execute-numeric-decision/SKILL.md) | [Break out of a stalled search](skills/bc/recover-search-anchor/SKILL.md) | [Exercise the public API](skills/doc2repo/run-observed-public-call/SKILL.md) |
 | Compare against an independent reference and test the required bound. | Drop unsupported assumptions and follow a new identifying clue. | Call the real entry point and observe its external effects. |
 
-[Browse all nine skills](skills/README.md) · [Explore illustrated skills and rollout examples](https://aweai-team.github.io/AutoMaster/#skills)
+[Explore all nine skills and teacher instructions](skills/README.md#what-the-teacher-reads) · [See how skills change a rollout](docs/method.md#behavioral-shaping-in-practice)
 
 ## Quick start
 

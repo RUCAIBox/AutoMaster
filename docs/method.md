@@ -8,13 +8,28 @@ Skills can suppress an undesirable habit or elicit an effective behavior that ap
 
 ## Behavioral shaping in practice
 
-<p align="center">
-  <a href="../assets/teacher_case.png"><img src="../assets/teacher_case.png" alt="Teacher execution examples: checking numerical claims, grounding search in evidence, and diagnosing a faulty self-test before changing implementation behavior." width="100%"></a>
-</p>
-
-These cases illustrate changes in execution, not just changes in wording. In the numerical and search examples, both executions succeed, yet differ in how they establish their conclusions. In the repository example, diagnosis preserves the specified ordering rule and improves test coverage. Click the figure to inspect the details.
-
-Read two of the illustrated interventions: [execute-numeric-decision](../skills/tb2.1/execute-numeric-decision/SKILL.md) and [recover-search-anchor](../skills/bc/recover-search-anchor/SKILL.md).
+<table>
+<tr>
+<td width="33%" valign="top">
+<h4>Verifying convergence</h4>
+<a href="../assets/skills/figure5a.png"><img src="../assets/skills/figure5a.png" alt="Both solvers meet the error threshold. The unguided Teacher claims fourth-order accuracy; the guided Teacher diagnoses the numerical error and verifies convergence across grid resolutions." width="100%"></a>
+<p>Both solvers meet the error threshold. The unguided Teacher claims fourth-order accuracy; the guided Teacher diagnoses the numerical error and verifies convergence across grid resolutions.</p>
+<a href="../skills/tb2.1/execute-numeric-decision/SKILL.md">execute-numeric-decision</a>
+</td>
+<td width="33%" valign="top">
+<h4>Finding the director</h4>
+<a href="../assets/skills/figure5b.png"><img src="../assets/skills/figure5b.png" alt="Both searches identify the same episode. The unguided Teacher repeatedly guesses an award; the guided Teacher follows episode credits to identify the director, then checks the award clue." width="100%"></a>
+<p>Both searches identify the same episode. The unguided Teacher repeatedly guesses an award; the guided Teacher follows episode credits to identify the director, then checks the award clue.</p>
+<a href="../skills/bc/recover-search-anchor/SKILL.md">recover-search-anchor</a>
+</td>
+<td width="33%" valign="top">
+<h4>Checking the sort order</h4>
+<a href="../assets/skills/figure5c.png"><img src="../assets/skills/figure5c.png" alt="A flawed self-test prompts the unguided Teacher to reverse the sorting rule. The guided Teacher diagnoses the test input, preserves the required order, and passes 38 of 38 tests." width="100%"></a>
+<p>A flawed self-test prompts the unguided Teacher to reverse the sorting rule. The guided Teacher diagnoses the test input, preserves the required order, and passes 38 of 38 tests.</p>
+<a href="https://aweai-team.github.io/AutoMaster/assets/paper.pdf?v=e0be391fbd#page=9">Trace failures to their source · Figure 5c</a>
+</td>
+</tr>
+</table>
 
 ## Skills and data selection work together
 
