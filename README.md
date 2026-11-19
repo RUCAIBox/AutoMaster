@@ -6,21 +6,28 @@
 
 *Beyond task success: **autonomously shaping teacher behavior to improve what students learn**.*
 
-[Inside AutoMaster](#inside-automaster) · [Results](#results) · [Insights](#key-insights) · [Skills](skills/README.md) · [Quick start](#quick-start) · [Models & data](https://huggingface.co/collections/RUC-AIBOX/automaster) · [Citation](#citation)
+[Video](#watch-automaster) · [Inside AutoMaster](#inside-automaster) · [Results](#results) · [Insights](#key-insights) · [Skills](skills/README.md) · [Quick start](#quick-start) · [Models & data](https://huggingface.co/collections/RUC-AIBOX/automaster) · [Citation](#citation)
 
-[![Paper](https://img.shields.io/badge/Paper-PDF-98644f.svg?logo=arxiv&logoColor=white)](https://aweai-team.github.io/AutoMaster-site/assets/paper.pdf)
-[![Homepage](https://img.shields.io/badge/Project-Homepage-606f2e.svg)](https://aweai-team.github.io/AutoMaster-site/)
+[![Paper](https://img.shields.io/badge/Paper-PDF-B31B1B.svg?logo=arxiv&logoColor=white)](https://aweai-team.github.io/AutoMaster/assets/paper.pdf)
+[![Homepage](https://img.shields.io/badge/Project-Homepage-606f2e.svg)](https://aweai-team.github.io/AutoMaster/)
 [![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-Collection-d5ac58.svg)](https://huggingface.co/collections/RUC-AIBOX/automaster)<br>
 [![Skills](https://img.shields.io/badge/Skills-9-7c8b62.svg)](skills/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-a29a7d.svg)](LICENSE)
 
 </div>
 
-**Task success alone does not specify which behaviors post-training should reinforce.** A successful teacher can still make unsupported claims, repeat unproductive searches, or test a substitute instead of the implementation it delivers.
+**A teacher can solve a task and still teach a bad habit.**
 
-**Skill-FT** uses natural-language skills to shape the Teacher's actual execution, then fine-tunes a Student on the resulting demonstrations. **AutoMaster** automates the research process: analyze trajectories, design and test interventions, curate data, train, evaluate, and refine.
+**AutoMaster** autonomously studies trajectories, designs skills, and selects demonstrations to make the same model a better teacher. **Skill-FT** guides Teacher rollouts with these skills and fine-tunes the Student on the resulting demonstrations. The Student is evaluated without generated skills.
 
-This first release provides **nine selected skills** and **inference recipes for three domains**, backed by a pinned public [AweAgent](https://github.com/AweAI-Team/AweAgent) dependency. See the [project page](https://aweai-team.github.io/AutoMaster-site/) and [Hugging Face collection](https://huggingface.co/collections/RUC-AIBOX/automaster) for the paper and released resources. The autonomous training controller is outside this release.
+This release includes [nine selected skills](skills/README.md) and [inference recipes](recipes/inference/README.md) for three domains, powered by [AweAgent](https://github.com/AweAI-Team/AweAgent).
+
+## Watch AutoMaster
+
+<p align="center">
+  <a href="https://aweai-team.github.io/AutoMaster/assets/overview.mp4"><img src="assets/readme/video-poster.jpg" alt="Watch the AutoMaster project video" width="760"></a><br>
+  <a href="https://aweai-team.github.io/AutoMaster/assets/overview.mp4"><b>▶ Watch the overview</b></a>
+</p>
 
 ## Inside AutoMaster
 
@@ -28,21 +35,17 @@ This first release provides **nine selected skills** and **inference recipes for
   <a href="assets/framework.png"><img src="assets/framework.png" alt="AutoMaster: an LLM research agent analyzes trajectories, designs skills for task subsets, tests teacher rollouts, selects demonstrations, and uses Student training and evaluation feedback to guide the next round." width="100%"></a>
 </p>
 
-1. **Analyze & design.** Study Student, unguided Teacher and available reference-model trajectories to identify useful behavioral interventions.
-2. **Generate & curate.** Inject selected skills into the Teacher's system prompt, execute tasks, inspect the resulting behavior, and select training demonstrations. Skills and task subsets have a many-to-many relationship.
-3. **Train & evaluate.** Fine-tune the Student with skill context retained in the training input. Evaluate without adding the generated skills, then use the results to guide further research.
+**Inner loop · Shape the demonstrations.** Analyze behaviors, design and test skills, and select training examples. Skills can apply to overlapping task subsets, with different combinations for different tasks.
 
-The Teacher stays fixed; the research agent improves how it produces teaching demonstrations. Read the [method guide](docs/method.md) for the distinction between AutoMaster, Skill-FT and the released skills.
+**Outer loop · Learn from the Student.** Train and evaluate the Student, then use its scores and execution traces to refine the next round of skill design and data selection.
+
+[Explore the method and behavioral examples →](docs/method.md)
 
 ## Results
 
-Scores (%) with **sample SD over three evaluations**. Terminal-Bench 2.1 and BrowseComp report accuracy; Doc2Repo reports test pass rate.
-
 <p align="center">
-  <a href="assets/readme/results.svg"><img src="assets/readme/results.svg" alt="Base, Vanilla SFT and AutoMaster results for Qwen3.5-4B and 9B across Terminal-Bench 2.1, BrowseComp and Doc2Repo. Bars show mean scores with sample SD." width="100%"></a>
+  <a href="assets/readme/results.svg"><img src="assets/readme/results.svg" alt="Base, Vanilla SFT and AutoMaster results for Qwen3.5-4B and 9B. Scores are percentages: accuracy for Terminal-Bench 2.1 and BrowseComp, test pass rate for Doc2Repo. Error bars show sample SD over three evaluations." width="100%"></a>
 </p>
-
-Vanilla SFT trains on 512 selected unguided demonstrations from the same Teacher. AutoMaster also uses 512 training examples. The selected skill library illustrates interventions explored during research; it is not the full training recipe for each checkpoint.
 
 ## Key Insights
 
@@ -60,13 +63,12 @@ Vanilla SFT trains on 512 selected unguided demonstrations from the same Teacher
 
 Each skill is a self-contained folder with a `SKILL.md` entrypoint.
 
-| Domain | A representative intervention | Start here |
+| Terminal tasks | Web search | Repository construction |
 |---|---|---|
-| Terminal | Make a numerical requirement an executed acceptance decision | [execute-numeric-decision](skills/tb2.1/execute-numeric-decision/SKILL.md) |
-| Search | Recover a stalled query by revisiting its unsupported assumption | [recover-search-anchor](skills/bc/recover-search-anchor/SKILL.md) |
-| SWE | Exercise the real public call chain and observe its external effects | [run-observed-public-call](skills/doc2repo/run-observed-public-call/SKILL.md) |
+| [Test a numerical claim](skills/tb2.1/execute-numeric-decision/SKILL.md) | [Break out of a stalled search](skills/bc/recover-search-anchor/SKILL.md) | [Exercise the public API](skills/doc2repo/run-observed-public-call/SKILL.md) |
+| Compare against an independent reference and test the required bound. | Drop unsupported assumptions and follow a new identifying clue. | Call the real entry point and observe its external effects. |
 
-Browse [all nine skills](skills/README.md). Select by the task's behavior and interfaces; there is no need to inject the entire library. Released Student inference does **not** require these skills in the prompt.
+[Browse all nine skills](skills/README.md) · [Explore illustrated skills and rollout examples](https://aweai-team.github.io/AutoMaster/#skills)
 
 ## Quick start
 
@@ -102,7 +104,7 @@ Configure the task assets and any required external services using the [inferenc
 awe-agent run --config recipes/inference/doc2repo.yaml --max-instances 1
 ```
 
-Each domain has a YAML recipe and supports `--num-rollouts 3`. See [inference guide](recipes/inference/README.md) for time budgets, sampling and search/Judge configuration.
+Use `--num-rollouts 3` for three evaluations; choose `terminal.yaml`, `browsecomp.yaml`, or `doc2repo.yaml` for the benchmark.
 
 ## Repository
 
